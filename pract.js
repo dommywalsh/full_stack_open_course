@@ -15,13 +15,24 @@
 
 
 // console.log(charCount(sentence));
-const t = [1, 2, 3, 4, 5]
+// const t = [1, 2, 3, 4, 5]
 
-const newArray = t.map(value => value * 2)
+// const newArray = t.map(value => value * 2)
 
-console.log(newArray);
+// console.log(newArray);
 
-const [first, second, ...rest] = t;
+// const [first, second, ...rest] = t;
 
-console.log(first);
-console.log(rest);
+// console.log(first);
+// console.log(rest);
+
+// const arrRange = (min, max) => {
+//   let arr = []
+
+//   for (let i = min; i <= max; i++){
+//     arr.push(i)
+//   }
+//   return arr;
+// }
+
+// console.log(arrRange(10, 25))
