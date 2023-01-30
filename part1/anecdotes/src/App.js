@@ -1,10 +1,6 @@
 import { useState } from 'react'
 
-const Button = ({handleClick, text}) => {
-  return (
-    <button onClick={handleClick}>{text}</button>
-  )
-}
+const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
 const App = () => {
   const anecdotes = [
@@ -27,11 +23,9 @@ const App = () => {
     const newPoints = [...points]
     newPoints[selected] ++
     setPoints(newPoints)
-    console.log(points)
   }
 
   const mostVotesIndex = points.indexOf(Math.max(...points))
-  console.log(mostVotesIndex)
 
   return (
     <div>
