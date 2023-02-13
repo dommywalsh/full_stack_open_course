@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Person from "./components/person";
+import Persons from "./components/persons";
 import Form from "./components/form";
 
 const App = () => {
@@ -66,20 +67,11 @@ const App = () => {
         search:
         <input value={filter} onChange={handleFilter}/>
       </div>
-        <ul>
-          {filteredPersons.map(person =>
-            <Person name={person.name} key={person.id} number={person.number}/>
-            )}
-        </ul>
         <h2>Add a new number</h2>
       <Form handleAddName={handleAddName} handleNameChange={handleNameChange}
           newName={newName} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <ul>
-        {persons.map(person => (
-          <Person name={person.name} key={person.id} number={person.number}/>
-        ))}
-      </ul>
+        <Persons persons={persons} filter={filter} filteredPersons={filteredPersons}/>
     </div>
   )
 }

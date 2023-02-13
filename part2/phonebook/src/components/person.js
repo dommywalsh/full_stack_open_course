@@ -1,7 +1,7 @@
 import React from "react"
 
 const Person = (props) => (
-  <li>{props.name}: {props.number}</li>
+  <p>{props.name}: {props.number}</p>
 )
 
 export default Person;
