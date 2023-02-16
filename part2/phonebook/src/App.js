@@ -20,7 +20,6 @@ const App = () => {
 
   const handleFilter = (event) => {
     let filterWord = event.target.value;
-    console.log(filterWord)
     setNewFilter(filterWord);
     const filtered = persons.filter((person) => person.name.toLowerCase()
       .includes(filterWord.toLowerCase()));
@@ -41,24 +40,33 @@ const App = () => {
 
 
     if (!uniqueName){
-      setPersons(persons.concat(newNameObject))
+      PersonService
+        .create(newNameObject)
+        .then(returnedPerson =>
+          setPersons(persons.concat(returnedPerson)))
     } else {
       alert(`${newName} is already taken`)
     };
 
     setNewName('')
     setNewNumber('')
-    console.log(persons)
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value)
+  }
+
+  const handleDelete = (id) => {
+    const person = persons.find((p) => p.id === id)
+    console.log(person)
+
+    // PersonService
+    //   .deletePerson()
+
   }
 
   return (
@@ -66,13 +74,23 @@ const App = () => {
       <h2>Phonebook</h2>
       <div>
         search:
-        <input value={filter} onChange={handleFilter}/>
+        <input value={filter}
+               onChange={handleFilter}/>
       </div>
         <h2>Add a new number</h2>
-      <Form handleAddName={handleAddName} handleNameChange={handleNameChange}
-          newName={newName} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
+      <Form
+        handleAddName={handleAddName}
+        handleNameChange={handleNameChange}
+        newName={newName}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-        <Persons persons={persons} filter={filter} filteredPersons={filteredPersons}/>
+        <Persons
+          persons={persons}
+          filter={filter}
+          filteredPersons={filteredPersons}
+          handleDelete={handleDelete}
+          />
     </div>
   )
 }
