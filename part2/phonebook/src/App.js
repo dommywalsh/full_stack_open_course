@@ -25,6 +25,7 @@ const App = () => {
       .includes(filterWord.toLowerCase()));
 
     setFilteredPersons(filtered);
+    setNewFilter('');
   }
 
   const handleAddName = (event) => {
@@ -33,7 +34,6 @@ const App = () => {
     const newNameObject = {
       name: newName,
       number: newNumber,
-      id: (persons.length + 1)
     };
 
     let uniqueName = persons.some((person) => person.name === newName)
@@ -45,7 +45,27 @@ const App = () => {
         .then(returnedPerson =>
           setPersons(persons.concat(returnedPerson)))
     } else {
-      alert(`${newName} is already taken`)
+        const response = window.confirm(
+          `${newName} is already added to the phonebook,
+          would you like to replace the old number with a new one?`);
+
+          if (response){
+            const person = persons.filter(person => person.name === newName);
+            const { id } = person;
+            const changedPerson = {...person, number: newNumber};
+
+            PersonService
+              .update(id, changedPerson)
+              .then((returnedPerson) => {setPersons(persons.map((person) =>
+                person.id !== id ? person : returnedPerson
+                )
+                )
+              }).catch((error) => {
+                console.log(error.response.data)
+              })
+          }
+
+
     };
 
     setNewName('')
@@ -61,12 +81,16 @@ const App = () => {
   }
 
   const handleDelete = (id) => {
-    const person = persons.find((p) => p.id === id)
-    console.log(person)
-
-    // PersonService
-    //   .deletePerson()
-
+    const person = persons.find((p) => p.id === id);
+    const confirmed = window.confirm(`Are you sure you would like to delete ${person.name}`)
+    if (confirmed){
+      PersonService
+        .deletePerson(person.id)
+        .then(()=> {
+          const filteredPeople = persons.filter((person) => person.id !== id);
+          setPersons(filteredPeople)
+        })
+    }
   }
 
   return (
@@ -74,8 +98,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <div>
         search:
-        <input value={filter}
-               onChange={handleFilter}/>
+        <input
+          value={filter}
+          onChange={handleFilter}
+          />
       </div>
         <h2>Add a new number</h2>
       <Form
@@ -83,7 +109,8 @@ const App = () => {
         handleNameChange={handleNameChange}
         newName={newName}
         newNumber={newNumber}
-        handleNumberChange={handleNumberChange}/>
+        handleNumberChange={handleNumberChange}
+        />
       <h2>Numbers</h2>
         <Persons
           persons={persons}
