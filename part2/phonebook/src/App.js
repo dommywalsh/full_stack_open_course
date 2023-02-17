@@ -36,6 +36,7 @@ const App = () => {
       number: newNumber,
     };
 
+    // check if the person exists in the DB
     let uniqueName = persons.some((person) => person.name === newName)
 
 
@@ -44,15 +45,19 @@ const App = () => {
         .create(newNameObject)
         .then(returnedPerson =>
           setPersons(persons.concat(returnedPerson)))
+
+        setNewName("");
+        setNewNumber("");
     } else {
         const response = window.confirm(
           `${newName} is already added to the phonebook,
           would you like to replace the old number with a new one?`);
 
           if (response){
-            const person = persons.filter(person => person.name === newName);
+            const person = persons.find(person => person.name === newName);
             const { id } = person;
-            const changedPerson = {...person, number: newNumber};
+            const changedPerson = { ...person, number: newNumber };
+            console.log('new object', changedPerson);
 
             PersonService
               .update(id, changedPerson)
@@ -64,11 +69,9 @@ const App = () => {
                 console.log(error.response.data)
               })
           }
-
-
     };
 
-    setNewName('')
+    setNewName('');
     setNewNumber('')
   }
 
