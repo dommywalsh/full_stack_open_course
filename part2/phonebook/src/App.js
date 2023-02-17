@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Persons from "./components/persons";
 import Form from "./components/form";
+import Notification from "./components/notification";
 import PersonService from "./services/persons"
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setNewFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState([])
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     PersonService
@@ -45,9 +47,12 @@ const App = () => {
         .create(newNameObject)
         .then(returnedPerson =>
           setPersons(persons.concat(returnedPerson)))
-
-        setNewName("");
-        setNewNumber("");
+        .catch((error) => {
+        setErrorMessage(error.response.data);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000)
+      })
     } else {
         const response = window.confirm(
           `${newName} is already added to the phonebook,
@@ -66,8 +71,15 @@ const App = () => {
                 )
                 )
               }).catch((error) => {
-                console.log(error.response.data)
-              })
+                setErrorMessage(
+                  `Information for ${person.name} has already been removed from server`
+                )
+              });
+              setPersons(persons.filter((p) => p.id !== id));
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+
           }
     };
 
@@ -98,6 +110,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={errorMessage} />
       <h2>Phonebook</h2>
       <div>
         search:
