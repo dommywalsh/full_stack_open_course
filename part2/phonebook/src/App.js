@@ -11,7 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setNewFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     PersonService
@@ -48,9 +48,9 @@ const App = () => {
         .then(returnedPerson =>
           setPersons(persons.concat(returnedPerson)))
         .catch((error) => {
-        setErrorMessage(error.response.data);
+        setNotificationMessage(error.response.data);
         setTimeout(() => {
-          setErrorMessage(null);
+          setNotificationMessage(null);
         }, 5000)
       })
     } else {
@@ -62,7 +62,6 @@ const App = () => {
             const person = persons.find(person => person.name === newName);
             const { id } = person;
             const changedPerson = { ...person, number: newNumber };
-            console.log('new object', changedPerson);
 
             PersonService
               .update(id, changedPerson)
@@ -71,13 +70,13 @@ const App = () => {
                 )
                 )
               }).catch((error) => {
-                setErrorMessage(
+                setNotificationMessage(
                   `Information for ${person.name} has already been removed from server`
                 )
               });
               setPersons(persons.filter((p) => p.id !== id));
               setTimeout(() => {
-                setErrorMessage(null)
+                setNotificationMessage(null)
               }, 5000)
 
           }
@@ -110,7 +109,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={notificationMessage} />
       <h2>Phonebook</h2>
       <div>
         search:
